@@ -64,3 +64,15 @@ class TranslationTest():
         plt.title('Pearson Correlation of Features', y=1.05, size=15)
         sns.heatmap(df.astype(float).corr(),linewidths=0.1,vmax=1.0, square=True, cmap=colormap, linecolor='white', annot=True)
         plt.show(1, block = False)
+
+    def find_outliers(self, subdivide_col = 'country', excludeFrance = True, outlier_thresh = 3):
+        df = self.df.copy()
+        if excludeFrance: df = df[df.country != 'France']
+        ConversionRates = self.df.groupby('country')['test'].sum()*1./self.df.groupby('country')['test'].count()
+        med, mad = ConversionRates.median(), ConversionRates.mad()
+        is_outlier = np.abs(ConversionRates.values - med) / mad > outlier_thresh
+        return pd.DataFrame({'Conversion Rate': ConversionRates, 'Outlier': is_outlier})
+
+    def is_there_an_outlier(self, subdivide_col = 'country', excludeFrance = True, outlier_thresh = 3):
+        df_outliers = find_outliers(subdivide_col = subdivide_col, excludeFrance = excludeFrance, outlier_thresh = outlier_thresh)
+        return np.count_nonzero(df_outliers.Outlier.values) > 0
