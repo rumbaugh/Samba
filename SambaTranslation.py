@@ -74,5 +74,5 @@ class TranslationTest():
         return pd.DataFrame({'Conversion Rate': ConversionRates, 'Outlier': is_outlier})
 
     def is_there_an_outlier(self, subdivide_col = 'country', excludeFrance = True, outlier_thresh = 3):
-        df_outliers = find_outliers(subdivide_col = subdivide_col, excludeFrance = excludeFrance, outlier_thresh = outlier_thresh)
+        df_outliers = self.find_outliers(subdivide_col = subdivide_col, excludeFrance = excludeFrance, outlier_thresh = outlier_thresh)
         return np.count_nonzero(df_outliers.Outlier.values) > 0
